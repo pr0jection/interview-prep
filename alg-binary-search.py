@@ -15,7 +15,7 @@
     search where (a == b) is valid (e.g. a list with 1 element),
     we must stop when the range is less than 0.
 '''
-blah = [1,4, 6,7,10,11]
+
 def binary_search(xs, x, a, b):
     if not xs or a > b:
         return None
