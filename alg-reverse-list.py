@@ -4,9 +4,6 @@ class Node(object):
         self.right = right
 
 
-the_list = Node(1, Node(2, Node(3, Node(4, Node(5)))))
-
-
 def reverse_iterative(node):
     rev = None
 
