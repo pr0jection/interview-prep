@@ -1,3 +1,17 @@
+'''
+    The key insight is that a linked list for a forward sequence
+    is constructed backwards, i.e.
+
+        1 : (2 : (3 : (4 : (5 : Nil) ) ) )
+
+    In a strictly evaluated language, the innermost list (5 : Nil)
+    must be evaluated first. This suggests that to construct a
+    reverse list, we must first evaluate (1 : Nil), then (2 : ...)
+    and so forth. This evaluation order is exactly what we get
+    when iterating over the original list forwards, so we can simply
+    prepend the elements as we go.
+'''
+
 class Node(object):
     def __init__(self, value, right=None):
         self.value = value
