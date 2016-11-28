@@ -85,3 +85,61 @@ def merge_sort(xs):
             j += 1
 
     return result
+
+
+class DirectedGraph(object):
+    def __init__(self):
+        self.incoming_edges = {}
+        self.outgoing_edges = {}
+
+    def add_node(self, a):
+        self.incoming_edges[a] = []
+        self.outgoing_edges[a] = []
+
+    def add_edge(self, a, b):
+        self.incoming_edges[b].append(a)
+        self.outgoing_edges[a].append(b)
+
+
+'''
+    Topological sort is a sort of a directed (acyclic) graph such that all for all
+    edges a -> b, a comes before b in the sorted result. The algorithm follows from
+    this definition: we can look at all nodes who never appear on the RHS (i.e. don't
+    have incoming edges) since they would always be safe to place in the front of the
+    list. Note that we could select any node with no incoming edges, meaning the
+    solution is not unique. It runs in O( V + E ).
+'''
+def topological_sort(graph):
+    result = []
+    incoming_edges = {}
+    no_incoming_edges = set()
+
+    # build a base set for nodes with no incoming edges
+    for e in graph.incoming_edges:
+        incoming_edges[e] = len(graph.incoming_edges[e])
+
+        if not incoming_edges[e]:
+            no_incoming_edges.add(e)
+
+    # graph is cyclic
+    if not no_incoming_edges:
+        return None
+
+    while no_incoming_edges:
+        some_edge = no_incoming_edges.pop()
+        result.append(some_edge)
+
+        # a node with no incoming edges can always be added to the
+        # result set without violating constraints. then, update the
+        # remaining counts to exclude this node
+        for e in graph.outgoing_edges[some_edge]:
+            incoming_edges[e] = incoming_edges[e] - 1
+
+            if not incoming_edges[e]:
+                no_incoming_edges.add(e)
+
+    # graph contains a cycle
+    if [ k for k, v in incoming_edges.items() if v ]:
+        return None
+
+    return result
