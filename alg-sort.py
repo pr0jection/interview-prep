@@ -87,20 +87,6 @@ def merge_sort(xs):
     return result
 
 
-class DirectedGraph(object):
-    def __init__(self):
-        self.incoming_edges = {}
-        self.outgoing_edges = {}
-
-    def add_node(self, a):
-        self.incoming_edges[a] = []
-        self.outgoing_edges[a] = []
-
-    def add_edge(self, a, b):
-        self.incoming_edges[b].append(a)
-        self.outgoing_edges[a].append(b)
-
-
 '''
     Topological sort is a sort of a directed (acyclic) graph such that all for all
     edges a -> b, a comes before b in the sorted result. The algorithm follows from
@@ -143,3 +129,28 @@ def topological_sort(graph):
         return None
 
     return result
+
+
+'''
+    Radix sort is a non-comparative sorting algorithm that works by looking at each
+    digit (10's place) in a number, assigning it to a bucket based off it, and
+    concatenating the buckets. When the number of digits in any number is fixed (e.g.
+    sorting 000-999) this can achieve a lower upper bound than the minimum for
+    comparison-based sorts -- O(n) instead of O(n log n). For integers, we start at
+    the least significant digit (a most significant digit sort would result in
+    lexographic order, perhaps useful for strings). At each step we preserve the
+    order of the original array, so radix sort is stable.
+'''
+def radix_sort(xs):
+    l = len(str(max(xs))) # how many buckets
+
+    for i in range(l):
+        buckets = [ [] for _ in range(10) ]
+
+        for n in xs:
+            digit = (n // (10 ** i)) % 10
+            buckets[digit].append(n)
+
+        xs = [ n for bucket in buckets for n in bucket ]
+
+    return xs
