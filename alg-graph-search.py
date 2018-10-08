@@ -26,6 +26,18 @@
     algorithm into a recursive variant.
 '''
 
+'''
+    Depth-first search can also be used to find cycles in a graph.
+    The undirected case is easy: if you encounter a node that you
+    have previously seen in your search, there is a cycle.
+
+    For a directed graph, we need to find the presence of any
+    back-edges, or edges pointing back to another node in the
+    current path. We can do this by looking at the current stack.
+'''
+
+import sys
+
 from Queue import Queue
 
 class UndirectedGraph(object):
@@ -82,12 +94,12 @@ def depth_first_search(graph, root, predicate):
 
 '''
     Dijkstra's algorithm is a fairly intuitive graph search algorithm to compute
-    all shortest paths from a fixed vertex. We basically have a set of all vertices
-    and weights (initially 0 for the root, infinity for the rest), and repeatedly
-    pop the vertex with the lowest weight. We can iterate over its neighbors and
-    update their weights if lowest_weight_to_point + weight_to_neighbor is lower
-    than the currently best seen weight. Popping the vertex with the lowest weight
-    is the key to making this work, since we know (assuming non-negative weights)
+    single-source shortest path (all shortest paths from a root). We basically have
+    a set of all vertices and weights (initially 0 for the root, infinity for the rest),
+    and repeatedly pop the vertex with the lowest weight. We can iterate over its
+    neighbors and update their weights if lowest_weight_to_point + weight_to_neighbor
+    is lower than the currently best seen weight. Popping the vertex with the lowest
+    weight is the key to making this work, since we know (assuming non-negative weights)
     that minimum weight is the final shortest weight to that node.
 
     This algorithm runs in O( E + V^2 ) time, and since E = O(V^2) generally just
@@ -114,3 +126,39 @@ def dijkstras_algorithm(graph, root):
                 shortest[neighbor] = min_weight + weight
 
     return shortest
+
+'''
+    The Floyd-Warshall algorithm for solving the all-pairs shortest path problem works
+    by considering the paths that go through an intermediate node (for every pair that's
+    not an edge, there is at least 1 intermediate node), for all possible intermediate
+    nodes. If a path going from i to k then k to j is faster than the previously best seen
+    path going from i to j, then update its distance.
+
+    It runs in O(V^3) time.
+'''
+def floyd_warshall_algorithm(graph):
+    nodes = set(graph.edges.keys())
+
+    distances = {}
+
+    # transform edges dict into a dict of dicts
+    for source, (destination, weight) in graph.edges.iteritems():
+        if source not in distances:
+            distances[source] = {}
+
+        distances[source][destination] = weight
+
+    for source in nodes:
+        distances[source][source] = 0
+
+    for k in nodes:
+        for i in nodes:
+            for j in nodes:
+                direct = distances[i].get(j, sys.maxint)
+                intermediate1 = distances[i].get(k, sys.maxint)
+                intermediate2 = distances[k].get(j, sys.maxint)
+
+                if direct > intermediate1 + intermediate2:
+                    distances[i][j] = intermediate1 + intermediate2
+
+    return distances
