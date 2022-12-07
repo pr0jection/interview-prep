@@ -10,54 +10,28 @@
 '''
 
 
-def top_down_edit_distance(a, b):
-    # if one of the strings is empty, the operations must all be
-    # insertions or deletions
-    if not a:
-        return len(b)
-
-    if not b:
-        return len(a)
-
-    # if the first letters are the same, it is optimal to just
-    # ignore them since the cost of an operation now and the cost
-    # of an operation later would be the same
-    if a[0] == b[0]:
-        return top_down_edit_distance(a[1:], b[1:])
-
-    # deletion: remove a letter from the target string
-    deletion = top_down_edit_distance(a, b[1:])
-
-    # insertion: insert the first letter of the source string
-    # into the target string
-    insertion = top_down_edit_distance(a[1:], b)
-
-    # replacement: replace the first letter of the target string with
-    # the first letter of the source string
-    replacement = top_down_edit_distance(a[1:], b[1:])
-
-    return 1 + min([deletion, insertion, replacement])
-
-
-def bottom_up_edit_distance(a, b):
+def edit_distance(a, b):
     table = []
 
-    for i in range(len(a)):
-        table.append([0] * len(b))
+    # build a table representing "how many edits are needed
+    # to get from a[:i] to b[:j]"
+    for i in range(len(a) + 1):
+        table.append([0] * (len(b) + 1))
 
     # the first horizontal and vertical rows are constant
     # since the only thing you can do is insert/delete
-    for i in range(len(a)):
-        table[i][0] = i + 1
+    for i in range(len(a) + 1):
+        table[i][0] = i
 
-    for j in range(len(b)):
-        table[0][j] = j + 1
+    for j in range(len(b) + 1):
+        table[0][j] = j
 
-    # the same algorithm as above, simply using already computer
-    # values in the table instead of recursive calls
-    for i in range(1, len(a)):
-        for j in range(1, len(b)):
-            if a[i] == b[j]:
+    # note the table is effectively 1-indexed because it tracks
+    # "prefix up to an index" (the 0'th prefix is an empty string)
+    for i in range(1, len(a) + 1):
+        for j in range(1, len(b) + 1):
+            # if the last letters are the same, no edits are necessary
+            if a[i - 1] == b[j - 1]:
                 table[i][j] = table[i - 1][j - 1]
             else:
                 deletion = table[i - 1][j]
@@ -66,4 +40,4 @@ def bottom_up_edit_distance(a, b):
 
                 table[i][j] = 1 + min([deletion, insertion, replacement])
 
-    return table[len(a) - 1][len(b) - 1]
+    return table[len(a)][len(b)]
