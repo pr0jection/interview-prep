@@ -1,18 +1,20 @@
 '''
-    Breadth- and depth-first search are very similar algorithms,
-    the primary difference is in the data structure used to store
-    the nodes to be visited. Breadth-first search uses a FIFO queue,
-    meaning we visit an entire "level" before proceeding to the next
-    "level" (which would be added to the back of the queue). The
-    depth-first search uses a stack instead, which reverses this
-    operation (the most recently visited node is processed again,
-    meaning we continually move down its neighbors).
+    Breadth- and depth-first search are similar algorithms, primarily
+    differing in the data structure used to store the nodes to be 
+    visited. Breadth-first search uses a FIFO queue, meaning we visit 
+    an entire "level" before proceeding to the next "level." The
+    depth-first search uses a stack instead, which visits a node's
+    children, the children's children, etc. to traverse an entire
+    "branch."
 
-    The only other difference is an optimization in the breadth-first
-    search: we add adjacent nodes to the visited set before actually
-    processing them. This helps us not have any duplicates stored in
-    the queue itself. It is incorrect to do this for depth-first
-    search, however:
+    BFS will find the shortest path to a solution. BFS can be used on
+    infinite graphs (if capped to an execution time or max level), DFS
+    generally cannot. DFS tends to use less memory for its stack.
+
+    Both algorithms deal with cycles by keeping track of a "visited"
+    set. In BFS, we add adjacent nodes to the visited set BEFORE
+    processing them, so as to avoid storing duplicates in the queue.
+    This does not work for DFS:
 
         A--B--E
         |  |
@@ -21,9 +23,8 @@
     If we started from A, we'd add B and C to the visited set, and
     prevent the correct depth-first execution A-B-D-C from occuring.
 
-    Note that the stack used by the depth-first search may be made
-    implicit via the call-stack, allowing us to easily translate the
-    algorithm into a recursive variant.
+    The stack used by DFS may be made implicit via the call-stack,
+    allowing us to easily make the algorithm recursive.
 '''
 
 '''
