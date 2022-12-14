@@ -36,30 +36,23 @@ def longest_common_subsequence(xs, ys):
     if not xs or not ys:
         return 0
 
-    # table[i][j] represents the longest common subsequence of xs[:i] and ys[:j]
+    # build a table representing the longest common subsequence
+    # of xs[:i] and ys[:j]
     table = []
 
-    for i in range(len(xs)):
-        table.append([0] * len(ys))
+    for i in range(len(xs) + 1):
+        table.append([0] * (len(ys) + 1))
 
-    # the first horizonal/vertical row is constant: if the letters match up,
-    # the subsequence will have one element, otherwise it will have zero
-    for i in range(len(xs)):
-        if ys[0] == xs[i]:
-            table[i][0] = 1
-
-    for j in range(len(ys)):
-        if xs[0] == ys[j]:
-            table[0][j] = 1
-
-    for i in range(1, len(xs)):
-        for j in range(1, len(ys)):
-            # if both of the strings contain the same character at the end,
+    # note the table is effectively 1-indexed because it tracks
+    # "up to an index" (up to the 0'th index is an empty string)
+    for i in range(1, len(xs) + 1):
+        for j in range(1, len(ys) + 1):
+            # if the strings contain the same character at the end,
             # we know it is ALWAYS part of the optimal solution
-            if xs[i] == ys[j]:
+            if xs[i - 1] == ys[j - 1]:
                 table[i][j] = 1 + table[i - 1][j - 1]
             # otherwise, ignore this letter and take the best surrounding solution
             else:
                 table[i][j] = max([table[i - 1][j], table[i][j - 1], table[i - 1][j - 1]])
 
-    return max([max(ys) for ys in table])
+    return table[len(xs)][len(ys)]
