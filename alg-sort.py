@@ -52,11 +52,11 @@ def quick_sort(xs, a, b):
     Merge-sort works by de-constructing the lists into smaller parts,
     sorting each part, then merging the results into the final result.
 
-    It can be used to sort items that are too large to fit in memory. For
-    example, you can start reading records from machine 1, writing two-record
-    sublists alternately to machine 3 and 4. Then you can merge the two-record
-    sublists into four-record sublists writing to machine 1 and 2, repeating
-    until you get one list with all the data.
+    You can use it to sort a list of items that is too big to fit into
+    memory. First, sort the largest chunk of items that fits into memory
+    and write it to disk. Repeat for the remaining chunks. Then, perform
+    an N-way merge of the files written to disk (reading one element from
+    them at a time.
 
     Merge-sort works in O(n log n) worst case time, but requires O(n)
     additional space (that is, it is not done in place). Typical implementations
