@@ -25,16 +25,17 @@
 
     The stack used by DFS may be made implicit via the call-stack,
     allowing us to easily make the algorithm recursive.
-'''
 
-'''
-    Depth-first search can also be used to find cycles in a graph.
-    The undirected case is easy: if you encounter a node that you
-    have previously seen in your search, there is a cycle.
+    DFS can also be used to find cycles in a graph. If the graph
+    is undirected, a cycle is present if you encounter an edge to
+    a node you have previously visited (and that node is not the
+    current node's parent).
 
-    For a directed graph, we need to find the presence of any
-    back-edges, or edges pointing back to another node in the
-    current path. We can do this by looking at the current stack.
+    In a directed graph, we need to find any back-edges, or edges
+    pointing back to another node in the current path. We do this
+    by inspecting the current stack. Just looking at the visited
+    set is not enough, since there may not be an edge to that node
+    at all.
 '''
 
 import sys
