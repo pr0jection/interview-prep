@@ -1,4 +1,24 @@
 '''
+    Bubble-sort is O(N^2), however it'll be very quick if the
+    data is already mostly-sorted. The worst case is the elements
+    being in reverse order.
+
+    Bubble-sort is in-place and stable.
+'''
+def bubble_sort(xs):
+    while True:
+        swapped = False
+
+        for i in range(1, len(xs)):
+            if xs[i-1] > xs[i]:
+                xs[i-1], xs[i] = xs[i], xs[i-1]
+                swapped = True
+
+        if not swapped:
+            break
+
+
+'''
     Intuitively, quick-sort works by choosing a pivot element
     (any element works, usually it's the last one in the list for
     ease of implementation or a random index), then arranging the
