@@ -49,3 +49,28 @@ def dec_to_base_n(num: int, base: int) -> str:
         res.append(symbols[num % base])
         num = int(num / base)
     return ''.join(reversed(res))
+
+
+def greatest_common_divisor(a: int, b: int) -> int:
+    '''
+    GCD can be computed by prime factorization -- after factoring
+    both numbers, just take the product of all the common primes.
+
+    It can also be computed by Euclid's algorithm, which subtracts
+    the smaller number from the larger in a recursive computation:
+
+    gcd(48, 18) = gcd(48 - 18, 18) = gcd(30 - 18, 18) ... = gcd(6, 6)
+
+    It can also be computed by the more efficient Euclidean algorithm,
+    which instead of subtracting takes the modulus:
+
+    gcd(48, 18) = gcd(18, 48 % 18) = gcd(18 % 12, 12) ... = gcd(6, 0)
+    '''
+
+    if b > a:
+        a, b = b, a
+
+    if b == 0 or a == b:
+        return a
+
+    return greatest_common_divisor(a % b, b)
