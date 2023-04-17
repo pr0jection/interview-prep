@@ -9,50 +9,39 @@
     Because tries are a tree of prefixes, they are typically used to store
     strings or bitsets. They can be used to implement predictive text/autocomplete.
 
-    This implementation optimizes (slightly) for space over performance. It's
-    possible, instead of using a linked list, to store children as a fixed-size
-    array with the number of elements being the size of the alphabet.
+    In a different language, you might choose to store children in a fixed-size
+    array (with the number of elements being the size of the alphabet).
 '''
 
-class TrieNode(object):
-    def __init__(self, char):
+class TrieNode:
+    def __init__(self, char: str) -> None:
         self.value = char
         self.terminator = False
-        self.children = []
+        self.children = {}
 
+    def insert(self, string: str) -> None:
+        if not string:
+            self.terminator = True
+            return
 
-def trie_init():
-    return TrieNode('')
+        letter = string[0]
+        node = self.children.get(letter)
 
+        if not node:
+            node = TrieNode(letter)
+            self.children[letter] = node
 
-def trie_insert(node, string):
-    if not string:
-        node.terminator = True
-        return
+        node.insert(string[1:])
 
-    letter = string[0]
-    letter_node = None
+    def find(self, string: str) -> bool:
+        if not string:
+            return node.terminator
 
-    for child in node.children:
-        if child.value == letter:
-            letter_node = child
-            break
+        node = self.children.get(string[0])
+        if node:
+            return node.find(string[1:)
+        
+        return False
+        
 
-    if not letter_node:
-        letter_node = TrieNode(letter)
-        node.children.append(letter_node)
-
-    trie_insert(letter_node, string[1:])
-
-
-def trie_find(node, string):
-    if not string:
-        return node.terminator
-
-    letter = string[0]
-
-    for child in node.children:
-        if child.value == letter:
-            return trie_find(child, string[1:])
-
-    return False
+trie = TrieNode('')
